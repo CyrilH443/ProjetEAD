@@ -5,28 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AnimatorScroll">
-
-    <android.widget.Toolbar
-        android:id="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#717574"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
-
-    </android.widget.Toolbar>
+    tools:context=".MainExemple">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -36,6 +15,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tool_bar"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Ajouter lieu" />
+
 </LinearLayout>

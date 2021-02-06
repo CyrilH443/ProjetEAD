@@ -18,4 +18,10 @@
         android:layout_height="wrap_content"
         android:text="Animation Item" />
 
+    <Button
+        android:id="@+id/btn_exemple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exemple projet Cours" />
+
 </LinearLayout>

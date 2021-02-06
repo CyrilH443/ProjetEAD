@@ -69,11 +69,7 @@ public class AnimatorItem extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         final PlaceAdapter adapter = new PlaceAdapter(this, places);
 
-        if (getIntent().getBooleanExtra("GRID", true)) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        } else {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> spinnerAdapter =

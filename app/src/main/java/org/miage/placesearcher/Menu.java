@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Menu extends AppCompatActivity {
 
-    private boolean enabledGrid = false;
-
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
@@ -17,7 +15,6 @@ public class Menu extends AppCompatActivity {
         findViewById(R.id.btn_animator_scroll).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Intent i = new Intent(Menu.this, AnimatorScroll.class);
-                i.putExtra("GRID", enabledGrid);
                 startActivity(i);
             }
         });
@@ -25,7 +22,13 @@ public class Menu extends AppCompatActivity {
         findViewById(R.id.btn_animator_item).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Intent i = new Intent(Menu.this, AnimatorItem.class);
-                i.putExtra("GRID", enabledGrid);
+                startActivity(i);
+            }
+        });
+
+        findViewById(R.id.btn_exemple).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                Intent i = new Intent(Menu.this, MainExempleChoix.class);
                 startActivity(i);
             }
         });
