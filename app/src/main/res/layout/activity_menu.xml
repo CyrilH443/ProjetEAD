@@ -9,14 +9,13 @@
         android:id="@+id/btn_animator_scroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Animator Sample Activity"
+        android:text="Animation Scroll"
         />
 
     <Button
         android:id="@+id/btn_animator_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adapter Sample Activity"
-        />
+        android:text="Animation Item" />
 
 </LinearLayout>
