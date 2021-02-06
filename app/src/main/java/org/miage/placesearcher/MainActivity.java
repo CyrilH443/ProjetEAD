@@ -18,53 +18,46 @@ import org.miage.placesearcher.model.Place;
 import org.miage.placesearcher.ui.PlaceAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import jp.wasabeef.recyclerview.adapters.*;
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.*;
 
+public class MainActivity<i> extends AppCompatActivity {
+    private static List<Place> places = new ArrayList<Place>();
 
-public class MainActivity extends AppCompatActivity {
-
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.tool_bar)
-    Toolbar mToolBar;
-    @BindView(R.id.spinner)
-    Spinner mSpinner;
-
-   /* enum Type {
+    // Enumération qui comprends toute les méthodes possible pour le scroll d'une recylcer View.
+    // Elle va être ajouter à la première liste déroulante.
+    enum Type {
         AlphaIn {
             @Override public AnimationAdapter get(Context context) {
-                MainAdapter adapter = new MainAdapter(context, new ArrayList<>(Arrays.asList(data)));
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
                 return new AlphaInAnimationAdapter(adapter);
             }
         },
         ScaleIn {
             @Override public AnimationAdapter get(Context context) {
-                MainAdapter adapter = new MainAdapter(context, new ArrayList<>(Arrays.asList(data)));
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
                 return new ScaleInAnimationAdapter(adapter);
             }
         },
         SlideInBottom {
             @Override public AnimationAdapter get(Context context) {
-                MainAdapter adapter = new MainAdapter(context, new ArrayList<>(Arrays.asList(data)));
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
                 return new SlideInBottomAnimationAdapter(adapter);
             }
         },
         SlideInLeft {
             @Override public AnimationAdapter get(Context context) {
-                MainAdapter adapter = new MainAdapter(context, new ArrayList<>(Arrays.asList(data)));
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
                 return new SlideInLeftAnimationAdapter(adapter);
             }
         },
         SlideInRight {
             @Override public AnimationAdapter get(Context context) {
-                MainAdapter adapter = new MainAdapter(context, new ArrayList<>(Arrays.asList(data)));
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
                 return new SlideInRightAnimationAdapter(adapter);
             }
         };
@@ -72,75 +65,85 @@ public class MainActivity extends AppCompatActivity {
         public abstract AnimationAdapter get(Context context);
     }
 
-    private static String[] data = new String[] {
-            "Apple", "Ball", "Camera", "Day", "Egg", "Foo", "Google", "Hello", "Iron", "Japan", "Coke",
-            "Dog", "Cat", "Yahoo", "Sony", "Canon", "Fujitsu", "USA", "Nexus", "LINE", "Haskell", "C++",
-            "Java", "Go", "Swift", "Objective-c", "Ruby", "PHP", "Bash", "ksh", "C", "Groovy", "Kotlin",
-            "Chip", "Japan", "U.S.A", "San Francisco", "Paris", "Tokyo", "Silicon Valley", "London",
-            "Spain", "China", "Taiwan", "Asia", "New York", "France", "Kyoto", "Android", "Google",
-            "iPhone", "iPad", "iPod", "Wasabeef"
-    };*/
+
+    enum Type2 {
+        FadeIn(new FadeInAnimator()),
+        FadeInDown(new FadeInDownAnimator()),
+        FadeInUp(new FadeInUpAnimator()),
+        FadeInLeft(new FadeInLeftAnimator()),
+        FadeInRight(new FadeInRightAnimator()),
+        Landing(new LandingAnimator()),
+        ScaleIn(new ScaleInAnimator()),
+        ScaleInTop(new ScaleInTopAnimator()),
+        ScaleInBottom(new ScaleInBottomAnimator()),
+        ScaleInLeft(new ScaleInLeftAnimator()),
+        ScaleInRight(new ScaleInRightAnimator()),
+        FlipInTopX(new FlipInTopXAnimator()),
+        FlipInBottomX(new FlipInBottomXAnimator()),
+        FlipInLeftY(new FlipInLeftYAnimator()),
+        FlipInRightY(new FlipInRightYAnimator()),
+        SlideInLeft(new SlideInLeftAnimator()),
+        SlideInRight(new SlideInRightAnimator()),
+        SlideInDown(new SlideInDownAnimator()),
+        SlideInUp(new SlideInUpAnimator()),
+        OvershootInRight(new OvershootInRightAnimator(1.0f)),
+        OvershootInLeft(new OvershootInLeftAnimator(1.0f));
+
+        private BaseItemAnimator mAnimator;
+
+        Type2(BaseItemAnimator animator) {
+            mAnimator = animator;
+        }
+
+        public BaseItemAnimator getAnimator() {
+            return mAnimator;
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-/*
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        for(int i = 0; i < 50000; i ++) {
+            places.add(new Place(0, 0, "Street" + i, "44000", "Nantes"));
+        }
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         if (getIntent().getBooleanExtra("GRID", true)) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
 
-
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> spinnerAdapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         for (Type type : Type.values()) {
             spinnerAdapter.add(type.name());
         }
-        mSpinner.setAdapter(spinnerAdapter);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 AnimationAdapter adapter = Type.values()[position].get(MainActivity.this);
                 adapter.setFirstOnly(true);
                 adapter.setDuration(500);
                 adapter.setInterpolator(new OvershootInterpolator(.5f));
-                mRecyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            @Override public void onNothingSelected(AdapterView<?> parent) {
             }
-        });*/
-
-      /*  mRecyclerView.setItemAnimator(new FadeInAnimator());
-        MainAdapter adapter = new MainAdapter(this, new ArrayList<>(Arrays.asList(data)));
-        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
+        });
+        recyclerView.setItemAnimator(new FadeInAnimator());
+        PlaceAdapter adapter = new PlaceAdapter(this, places);
+        SlideInLeftAnimationAdapter alphaAdapter = new SlideInLeftAnimationAdapter(adapter);
         alphaAdapter.setFirstOnly(true);
         alphaAdapter.setDuration(500);
         alphaAdapter.setInterpolator(new OvershootInterpolator(.5f));
-        mRecyclerView.setAdapter(alphaAdapter);
-*/
-
-        //Binding ButterKnife annotations now that content view has been set
-        ButterKnife.bind(this);
-
-
-        // Define list of persons
-        List<Place> places = new ArrayList<Place>();
-        for (int i = 0; i < 50000; i ++) {
-            places.add(new Place(0, 0, "Street" + i, "44000", "Nantes"));
-        }
-        // Instanciate a PersonAdapter
-        PlaceAdapter adapter = new PlaceAdapter(this, places);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        recyclerView.setAdapter(alphaAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override

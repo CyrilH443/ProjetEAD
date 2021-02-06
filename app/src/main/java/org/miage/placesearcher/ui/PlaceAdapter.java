@@ -52,6 +52,17 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         return mPlaces.size();
     }
 
+    public void remove(int position) {
+        mPlaces.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void add(int position) {
+        mPlaces.add(position, new Place(0, 0, "*******************", "666", "Enfer"));
+        notifyItemInserted(position);
+    }
+
+
     // Pattern ViewHolder
     class PlaceViewHolder extends RecyclerView.ViewHolder
     {

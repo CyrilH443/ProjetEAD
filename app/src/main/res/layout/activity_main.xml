@@ -11,7 +11,7 @@
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#3DC49D"
+        android:background="#717574"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,6 +27,53 @@
         </RelativeLayout>
 
     </android.widget.Toolbar>
+
+    <android.widget.Toolbar
+        android:id="@+id/tool_bar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#717574"
+        android:minHeight="?attr/actionBarSize"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/del"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:text="DEL"
+                />
+
+            <TextView
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/del"
+                android:layout_centerInParent="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:text="ADD"
+                />
+
+        </RelativeLayout>
+
+    </android.widget.Toolbar>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
