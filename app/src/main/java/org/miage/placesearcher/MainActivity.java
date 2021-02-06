@@ -122,6 +122,28 @@ public class MainActivity<i> extends AppCompatActivity {
         final PlaceAdapter adapter = new PlaceAdapter(this, places);
         recyclerView.setAdapter(adapter);
 
+        Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
+        ArrayAdapter<String> spinnerAdapter2 =
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        for (Type2 type : Type2.values()) {
+            spinnerAdapter2.add(type.name());
+        }
+        spinner2.setAdapter(spinnerAdapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                recyclerView.setItemAnimator(Type2.values()[position].getAnimator());
+                recyclerView.getItemAnimator().setAddDuration(500);
+                recyclerView.getItemAnimator().setRemoveDuration(500);
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
         // Premier Spinner permettant l'animation du Scroll
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> spinnerAdapter =
@@ -143,25 +165,7 @@ public class MainActivity<i> extends AppCompatActivity {
             }
         });
 
-        Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
-        ArrayAdapter<String> spinnerAdapter2 =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        for (Type2 type : Type2.values()) {
-            spinnerAdapter2.add(type.name());
-        }
-        spinner2.setAdapter(spinnerAdapter2);
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recyclerView.setItemAnimator(Type2.values()[position].getAnimator());
-                recyclerView.getItemAnimator().setAddDuration(500);
-                recyclerView.getItemAnimator().setRemoveDuration(500);
-            }
 
-            @Override public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
