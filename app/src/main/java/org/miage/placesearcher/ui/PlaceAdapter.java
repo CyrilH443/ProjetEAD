@@ -85,8 +85,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             }
         });
 
-
-
     }
 
     @Override

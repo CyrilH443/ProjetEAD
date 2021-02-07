@@ -1,6 +1,8 @@
 package org.miage.placesearcher;
 
+
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.miage.placesearcher.model.Place;
 import org.miage.placesearcher.ui.PlaceAdapter;
 import org.miage.placesearcher.ui.SwipeController;
+import org.miage.placesearcher.ui.SwipeControllerActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +32,52 @@ import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
-import jp.wasabeef.recyclerview.animators.FadeInRightAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 
 public class MainExemple extends AppCompatActivity {
 
     private static List<Place> places = new ArrayList<Place>();
+    SwipeController swipeController = null;
+
+    // Enumération qui comprends toute les méthodes possible pour le scroll d'une recylcer View.
+    // Elle va être ajouter à la première liste déroulante.
+    enum Type {
+        AlphaIn {
+            @Override public AnimationAdapter get(Context context) {
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
+                return new AlphaInAnimationAdapter(adapter);
+            }
+        },
+        ScaleIn {
+            @Override public AnimationAdapter get(Context context) {
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
+                return new ScaleInAnimationAdapter(adapter);
+            }
+        },
+        SlideInBottom {
+            @Override public AnimationAdapter get(Context context) {
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
+                return new SlideInBottomAnimationAdapter(adapter);
+            }
+        },
+        SlideInLeft {
+            @Override public AnimationAdapter get(Context context) {
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
+                return new SlideInLeftAnimationAdapter(adapter);
+            }
+        },
+        SlideInRight {
+            @Override public AnimationAdapter get(Context context) {
+                PlaceAdapter adapter = new PlaceAdapter(context, places);
+                return new SlideInRightAnimationAdapter(adapter);
+            }
+        };
+
+        public abstract AnimationAdapter get(Context context);
+    }
+    // Instanciate a PlaceAdapter
+
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -48,17 +89,38 @@ public class MainExemple extends AppCompatActivity {
 
         // Binding ButterKnife annotations now that content view has been set
         ButterKnife.bind(this);
+        final PlaceAdapter adapter = new PlaceAdapter(this, places);
 
         for (int i = 0; i < 50000; i ++) {
             places.add(new Place(0, 0, "Street" + i, "44000", "Nantes"));
         }
-        // Instanciate a PersonAdapter
-        final PlaceAdapter adapter = new PlaceAdapter(this, places);
+
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setupRecyclerView(adapter);
 
+        // On charge les différentes méthodes de scroll dans le spinner.
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<String> spinnerAdapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        for (Type type : Type.values()) {
+            spinnerAdapter.add(type.name());
+        }
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                AnimationAdapter adapter = Type.values()[position].get(MainExemple.this);
+                adapter.setFirstOnly(true);
+                adapter.setDuration(500);
+                adapter.setInterpolator(new OvershootInterpolator(.5f));
+                mRecyclerView.setAdapter(adapter);
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
-        mRecyclerView.setItemAnimator(new SlideInUpAnimator());
+        mRecyclerView.setItemAnimator(new FadeInAnimator());
         SlideInLeftAnimationAdapter alphaAdapter = new SlideInLeftAnimationAdapter(adapter);
         alphaAdapter.setFirstOnly(true);
         alphaAdapter.setDuration(500);
@@ -66,21 +128,50 @@ public class MainExemple extends AppCompatActivity {
         mRecyclerView.setAdapter(alphaAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        SwipeController swipeController = new SwipeController();
 
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(mRecyclerView);
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+
+
+        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 adapter.add(1);
             }
         });
+
+        mRecyclerView.setItemAnimator(new SlideInLeftAnimator());
+        mRecyclerView.setAdapter(adapter);
+
+
+
+
+
     }
 
     @Override
     protected void onResume() {
         // Do NOT forget to call super.onResume()
         super.onResume();
+    }
+
+    private void setupRecyclerView(final PlaceAdapter adapter) {
+
+        swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                adapter.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+            }
+        });
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
     }
 }
