@@ -28,7 +28,7 @@ public class Menu extends AppCompatActivity {
 
         findViewById(R.id.btn_exemple).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Intent i = new Intent(Menu.this, MainExempleChoix.class);
+                Intent i = new Intent(Menu.this, MainExemple.class);
                 startActivity(i);
             }
         });

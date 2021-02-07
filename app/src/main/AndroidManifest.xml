@@ -18,7 +18,6 @@
         </activity>
         <activity android:name=".AnimatorScroll"/>
         <activity android:name=".AnimatorItem"/>
-        <activity android:name=".MainExempleChoix"/>
         <activity android:name=".MainExemple"/>
     </application>
 
