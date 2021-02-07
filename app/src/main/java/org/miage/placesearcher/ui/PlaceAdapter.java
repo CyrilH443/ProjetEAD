@@ -46,7 +46,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     }
 
     @Override
-    public void onBindViewHolder(PlaceAdapter.PlaceViewHolder holder, int position) {
+    public void onBindViewHolder(PlaceAdapter.PlaceViewHolder holder, final int position) {
         // Adapt the ViewHolder state to the new element
         Place place = mPlaces.get(position);
         holder.mPlaceStreetTextView.setText(place.getStreet());
@@ -74,6 +74,14 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                     // Silent catch : sound will not be played
                     e.printStackTrace();
                 }
+            }
+        });
+
+        holder.mPlaceIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                remove(position);
+                return true;
             }
         });
 

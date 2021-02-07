@@ -29,6 +29,7 @@ import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -125,13 +126,16 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
 
-    mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            adapter.remove(1);
-            return true;
-        }
-    });
+        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                adapter.add(1);
+            }
+        });
+
+        mRecyclerView.setItemAnimator(new SlideInLeftAnimator());
+        mRecyclerView.setAdapter(adapter);
+
+
 
     }
 
