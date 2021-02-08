@@ -68,7 +68,7 @@ public class MainExemple extends AppCompatActivity {
 
         mRecyclerView.setItemAnimator(new SlideInDownAnimator());
         SlideInLeftAnimationAdapter alphaAdapter = new SlideInLeftAnimationAdapter(adapter);
-        alphaAdapter.setFirstOnly(true);
+        alphaAdapter.setFirstOnly(false);
         alphaAdapter.setDuration(500);
         alphaAdapter.setInterpolator(new OvershootInterpolator(.5f));
         mRecyclerView.setAdapter(alphaAdapter);
