@@ -20,6 +20,7 @@ enum ButtonsState {
 
 public class SwipeController extends ItemTouchHelper.Callback {
 
+    //Pour bloquer le retour après le swipe
     private boolean swipeBack = false;
 
     private ButtonsState buttonShowedState = ButtonsState.GONE;
@@ -36,6 +37,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
         this.buttonsActions = buttonsActions;
     }
 
+    //activer le balayage vers la gauche et vers la droite
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -50,9 +52,9 @@ public class SwipeController extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
     }
-
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
+        //bloquer le balayage pour éviter que le bouton DELETE Disparaisse dès que le swipe se termine
         if (swipeBack) {
             swipeBack = buttonShowedState != ButtonsState.GONE;
             return 0;
@@ -60,9 +62,12 @@ public class SwipeController extends ItemTouchHelper.Callback {
         return super.convertToAbsoluteDirection(flags, layoutDirection);
     }
 
+
+    //Déclenché seulement lors du balayage de l'ecran
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            //Permet de recupérer le dégré de swipe puis appel à setTouchListener
             if (buttonShowedState != ButtonsState.GONE) {
                 if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) dX = Math.min(dX, -buttonWidth);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -82,8 +87,10 @@ public class SwipeController extends ItemTouchHelper.Callback {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                //On redefinit le swipeback à true
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
+                    //si on glisse assez l'element du recyclerView , on change l'état du bouton
                     if (dX < -buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
 
                     if (buttonShowedState != ButtonsState.GONE) {
@@ -113,6 +120,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //si buttonShowedState est différent de GONE, simuler un clic sur RecyclerView
                     SwipeController.super.onChildDraw(c, recyclerView, viewHolder, 0F, dY, actionState, isCurrentlyActive);
                     recyclerView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
@@ -123,6 +131,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
                     setItemsClickable(recyclerView, true);
                     swipeBack = false;
 
+                    //Vérifier si le bouton a été cliqué ou non
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                         if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
                             buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
@@ -142,6 +151,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
         }
     }
 
+    //Dessiner le boutton DELETE
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
         float buttonWidthWithoutPadding = buttonWidth - 20;
         float corners = 16;

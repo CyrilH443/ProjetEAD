@@ -89,7 +89,9 @@ public class MainExemple extends AppCompatActivity {
 
     private void setupRecyclerView(final PlaceAdapter adapter) {
 
+        //on definit notre action SwipeController
         swipeController = new SwipeController(new SwipeControllerActions() {
+            //Lorsqu'on clique sur le bouton DELETE
             @Override
             public void onRightClicked(int position) {
                 adapter.remove(position);
@@ -98,9 +100,11 @@ public class MainExemple extends AppCompatActivity {
             }
         });
 
+        //on attache notre action SwipeController à la RecyclerView
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
 
+        //Pour correctement dessiner le bouton DELETE, evite que le bouton disparaisse lors du défilement
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
