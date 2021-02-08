@@ -100,25 +100,7 @@ public class MainExemple extends AppCompatActivity {
         setupRecyclerView(adapter);
 
         // On charge les différentes méthodes de scroll dans le spinner.
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> spinnerAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        for (Type type : Type.values()) {
-            spinnerAdapter.add(type.name());
-        }
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                AnimationAdapter adapter = Type.values()[position].get(MainExemple.this);
-                adapter.setFirstOnly(true);
-                adapter.setDuration(500);
-                adapter.setInterpolator(new OvershootInterpolator(.5f));
-                mRecyclerView.setAdapter(adapter);
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+
 
         mRecyclerView.setItemAnimator(new FadeInAnimator());
         SlideInLeftAnimationAdapter alphaAdapter = new SlideInLeftAnimationAdapter(adapter);
@@ -128,11 +110,7 @@ public class MainExemple extends AppCompatActivity {
         mRecyclerView.setAdapter(alphaAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-
-
-
-        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ajouter).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 adapter.add(1);
             }
