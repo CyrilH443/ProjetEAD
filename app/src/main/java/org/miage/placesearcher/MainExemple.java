@@ -32,51 +32,15 @@ import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 
 public class MainExemple extends AppCompatActivity {
 
     private static List<Place> places = new ArrayList<Place>();
     SwipeController swipeController = null;
-
-    // Enumération qui comprends toute les méthodes possible pour le scroll d'une recylcer View.
-    // Elle va être ajouter à la première liste déroulante.
-    enum Type {
-        AlphaIn {
-            @Override public AnimationAdapter get(Context context) {
-                PlaceAdapter adapter = new PlaceAdapter(context, places);
-                return new AlphaInAnimationAdapter(adapter);
-            }
-        },
-        ScaleIn {
-            @Override public AnimationAdapter get(Context context) {
-                PlaceAdapter adapter = new PlaceAdapter(context, places);
-                return new ScaleInAnimationAdapter(adapter);
-            }
-        },
-        SlideInBottom {
-            @Override public AnimationAdapter get(Context context) {
-                PlaceAdapter adapter = new PlaceAdapter(context, places);
-                return new SlideInBottomAnimationAdapter(adapter);
-            }
-        },
-        SlideInLeft {
-            @Override public AnimationAdapter get(Context context) {
-                PlaceAdapter adapter = new PlaceAdapter(context, places);
-                return new SlideInLeftAnimationAdapter(adapter);
-            }
-        },
-        SlideInRight {
-            @Override public AnimationAdapter get(Context context) {
-                PlaceAdapter adapter = new PlaceAdapter(context, places);
-                return new SlideInRightAnimationAdapter(adapter);
-            }
-        };
-
-        public abstract AnimationAdapter get(Context context);
-    }
-    // Instanciate a PlaceAdapter
 
 
     @BindView(R.id.recyclerView)
@@ -89,12 +53,12 @@ public class MainExemple extends AppCompatActivity {
 
         // Binding ButterKnife annotations now that content view has been set
         ButterKnife.bind(this);
-        final PlaceAdapter adapter = new PlaceAdapter(this, places);
 
         for (int i = 0; i < 50000; i ++) {
             places.add(new Place(0, 0, "Street" + i, "44000", "Nantes"));
         }
 
+        final PlaceAdapter adapter = new PlaceAdapter(this, places);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         setupRecyclerView(adapter);
@@ -102,7 +66,7 @@ public class MainExemple extends AppCompatActivity {
         // On charge les différentes méthodes de scroll dans le spinner.
 
 
-        mRecyclerView.setItemAnimator(new FadeInAnimator());
+        mRecyclerView.setItemAnimator(new SlideInDownAnimator());
         SlideInLeftAnimationAdapter alphaAdapter = new SlideInLeftAnimationAdapter(adapter);
         alphaAdapter.setFirstOnly(true);
         alphaAdapter.setDuration(500);
@@ -115,14 +79,6 @@ public class MainExemple extends AppCompatActivity {
                 adapter.add(1);
             }
         });
-
-        mRecyclerView.setItemAnimator(new SlideInLeftAnimator());
-        mRecyclerView.setAdapter(adapter);
-
-
-
-
-
     }
 
     @Override
